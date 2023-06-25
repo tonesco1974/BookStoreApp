@@ -1,0 +1,28 @@
+﻿
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center align-content-center">
+                <form asp-controller="Home" asp-action="ProcessFile" method="post" enctype="multipart/form-data">
+                    <div class="form-group mt-3">
+                        <h2 class="card-title">Select JSON file</h2>
+                        <input type="file" name="file" id="file" accept=".json" class="form-control mt-5" />
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Upload and Process File</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5 pt-5">
+        <div class="col-12 text-center">
+            <a href="https://github.com/dudeonthehorse/datasets/blob/master/amazon.books.json" target="_blank" class="btn btn-secondary">Get your data here!</a>
+        </div>
+    </div>
+</div>
+
+
+
+@{
+}
