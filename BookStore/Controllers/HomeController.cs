@@ -108,7 +108,7 @@ namespace BookStore.Controllers
                 return View("UploadFile");
             }
 
-            return View("Index");
+            return RedirectToAction(nameof(Index)); 
         }
 
     }

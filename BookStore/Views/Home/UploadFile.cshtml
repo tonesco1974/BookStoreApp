@@ -3,13 +3,13 @@
     <div class="row">
         <div class="col-12">
             <div class="text-center align-content-center">
-                <form asp-controller="Home" asp-action="ProcessFile" method="post" enctype="multipart/form-data">
+                <form asp-controller="Home" id="form" asp-action="ProcessFile" method="post" enctype="multipart/form-data">
                     <div class="form-group mt-3">
                         <h2 class="card-title">Select JSON file</h2>
                         <input type="file" name="file" id="file" accept=".json" class="form-control mt-5" />
                     </div>
                     <div class="mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg">Upload and Process File</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Upload and Process File</button>
                     </div>
                 </form>
             </div>
@@ -24,5 +24,30 @@
 
 
 
-@{
-}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtiene una referencia al formulario y al botón submit
+        var form = document.getElementById("form");
+        var submitBtn = document.getElementById("submitBtn");
+
+        // Deshabilita el botón submit al cargar la página
+        submitBtn.disabled = true;
+
+        // Agrega un controlador de eventos para verificar si se ha seleccionado un archivo
+        document.getElementById("file").addEventListener("change", function () {
+            // Habilita el botón submit si se ha seleccionado un archivo
+            submitBtn.disabled = this.files.length === 0;
+        });
+
+        // Intercepta el evento de envío del formulario
+        form.addEventListener("submit", function () {
+            // Deshabilita el botón submit antes de enviar el formulario
+            submitBtn.style.display = "none";
+        });
+        submitBtn.addEventListener("click", function () {
+            submitBtn.style.display = "none";
+        }); 
+    });
+</script>
+
+

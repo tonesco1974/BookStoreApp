@@ -21,6 +21,7 @@ namespace BookStore.Services
             this.db = db;
         }
 
+        // Processes the JSON file data and saves it to the database.
         public async Task Proccess(IEnumerable<JsonFileViewModel> model)
         {
             await GenerateCategoriesAsync(model);
@@ -28,6 +29,7 @@ namespace BookStore.Services
             await GenerateBooksAsync(model);
         }
 
+        // Generates book entities based on the provided JSON file data and saves them to the database.
         private async Task GenerateBooksAsync(IEnumerable<JsonFileViewModel> model)
         {
             foreach (var bookJson in model.Where(b => !string.IsNullOrEmpty(b.isbn)))
@@ -62,6 +64,7 @@ namespace BookStore.Services
             }
         }
 
+        // Associates authors with the book entity based on the JSON file data.
         private void GetAuthors(JsonFileViewModel? bookJson, Book book)
         {
             foreach (var aut in bookJson.authors)
@@ -75,9 +78,10 @@ namespace BookStore.Services
             }
         }
 
+        // Associates categories with the book entity based on the JSON file data.
         private void GetCategories(JsonFileViewModel? bookJson, Book book)
         {
-            if (bookJson == null) return;   
+            if (bookJson == null) return;
 
             foreach (var cat in bookJson.categories)
             {
@@ -90,6 +94,7 @@ namespace BookStore.Services
             }
         }
 
+        // Parses and sets the published date for the book entity.
         private static void GetPublishedDate(JsonFileViewModel? bookJson, Book book)
         {
             if (bookJson == null) return;
@@ -109,9 +114,10 @@ namespace BookStore.Services
             }
         }
 
+        // Parses and sets the external ID for the book entity.
         private static void GetExternalId(JsonFileViewModel? bookJson, Book book)
         {
-            if(bookJson == null) return;
+            if (bookJson == null) return;
             if (bookJson._id is not null)
             {
                 var idObject = JsonConvert.DeserializeObject(bookJson._id.ToString());
@@ -128,6 +134,7 @@ namespace BookStore.Services
             }
         }
 
+        // Removes dollar sign ($) from a JSON string.
         public string RemoveDollarSignFromJsonString(string jsonString)
         {
             JToken token = JToken.Parse(jsonString);
@@ -142,6 +149,7 @@ namespace BookStore.Services
             return jsonString;
         }
 
+        // Recursively removes properties starting with dollar sign ($) from a JObject.
         private void RemoveDollarSignFromJObject(JObject jsonObject)
         {
             foreach (JProperty property in jsonObject.Properties().ToList())
@@ -158,12 +166,13 @@ namespace BookStore.Services
             }
         }
 
+        // Generates author entities based on the provided JSON file data and saves them to the database.
         private async Task GenerateAuthorsAsync(IEnumerable<JsonFileViewModel> model)
         {
             List<string> UniqueAuthors = model
-           .SelectMany(book => book.authors.Where(a => !string.IsNullOrWhiteSpace(a)))
-           .Distinct()
-           .ToList();
+                .SelectMany(book => book.authors.Where(a => !string.IsNullOrWhiteSpace(a)))
+                .Distinct()
+                .ToList();
 
             foreach (var author in UniqueAuthors)
             {
@@ -175,12 +184,13 @@ namespace BookStore.Services
             }
         }
 
+        // Generates category entities based on the provided JSON file data and saves them to the database.
         private async Task GenerateCategoriesAsync(IEnumerable<JsonFileViewModel> model)
         {
             List<string> UniqueCategories = model
-                        .SelectMany(book => book.categories.Where(c => !string.IsNullOrWhiteSpace(c)))
-                        .Distinct()
-                        .ToList();
+                .SelectMany(book => book.categories.Where(c => !string.IsNullOrWhiteSpace(c)))
+                .Distinct()
+                .ToList();
 
             foreach (var category in UniqueCategories)
             {
@@ -192,4 +202,5 @@ namespace BookStore.Services
             }
         }
     }
+
 }

@@ -4,110 +4,125 @@
     ViewData["Title"] = "Home Page";
 }
 
+
+
 <div class="text-center mt-4">
     <h1 class="display-4">Welcome to the Book's Store</h1>
-    <div class="container">
-        <div class="row">
-            <div class="col-6 text-start mb-3">
-                <form class="d-flex" asp-action="OrderBy">
-                    <div class="col-6">
-                        <select name="orderBy" class="form-select" id="orderBy">
-                            <option value=1>By title</option>
-                            <option value=2>By published date</option>
-                        </select>
-                    </div>
-                    <div class="col-6 mx-2">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Apply</button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-6 text-end">
-                <a asp-controller="Home" asp-action="ShowFavorites" class="btn btn-primary m-lg-2">Show Favourites</a>
+
+    @if (Model is null || !Model.Any())
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-3">
+                    <h2 class="display-3"> No books found!  </h2>
+                </div>
             </div>
         </div>
-    </div>
-    <hr />
-
-    <div class="container">
-        <div class="row">
-            @foreach (var book in Model)
-            {
-                <div class="col-sm-4 col-4">
-
-                    <div class="card mb-3" style="height:750px">
-                        <h3 class="card-header" >@book.Title</h3>
-                        <div class="card-body" >
-                            @if (book.Authors.Any())
-                            {
-                                <h5 class="card-title">
-                                    @string.Join(", ", book.Authors.Select(c => c.Name))
-                                </h5>
-                            }
-                            @if (book.Categories.Any())
-                            {
-                                <h6 class="card-subtitle text-muted">
-                                    @string.Join(", ", book.Categories.Select(c => c.Name))
-                                </h6>
-                            }
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-6 text-start mb-3">
+                    <form class="d-flex" asp-action="OrderBy">
+                        <div class="col-6">
+                            <select name="orderBy" class="form-select" id="orderBy">
+                                <option value=1>By title</option>
+                                <option value=2>By published date</option>
+                            </select>
                         </div>
-
-                        <div class="card-body card-img">
-                            <img src="@book.ThumbnailUrl" style="height:186px; width:150px" />
+                        <div class="col-6 mx-2">
+                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Apply</button>
                         </div>
+                    </form>
+                </div>
+                <div class="col-6 text-end">
+                    <a asp-controller="Home" asp-action="ShowFavorites" class="btn btn-primary m-lg-2">Show Favourites</a>
+                </div>
+            </div>
+        </div>
+        <hr />
 
-                        @if (!string.IsNullOrEmpty(book.ShortDescription))
-                        {
+        <div class="container">
+            <div class="row">
+                @foreach (var book in Model)
+                {
+                    <div class="col-sm-4 col-4">
+
+                        <div class="card mb-3" style="height:750px">
+                            <h3 class="card-header">@book.Title</h3>
                             <div class="card-body">
-                                <p class="card-text">
+                                @if (book.Authors.Any())
+                                {
+                                    <h5 class="card-title">
+                                        @string.Join(", ", book.Authors.Select(c => c.Name))
+                                    </h5>
+                                }
+                                @if (book.Categories.Any())
+                                {
+                                    <h6 class="card-subtitle text-muted">
+                                        @string.Join(", ", book.Categories.Select(c => c.Name))
+                                    </h6>
+                                }
+                            </div>
 
-                                    @if (book.ShortDescription.Length > 150)
-                                    {
-                                    <p>@book.ShortDescription.Substring(0,150)</p>
-                                    }
-                                    else
-                                    {
-                                    <p>@book.ShortDescription</p>
-                                    }
-                                </p>
+                            <div class="card-body card-img">
+                                <img src="@book.ThumbnailUrl" style="height:186px; width:150px" />
                             </div>
-                        }
-                        else
-                        {
-                            <div class="card-body" style="height:140px">
-                            </div>
-                        }
-                        
-                        <div class="card-body">
-                            <h5 class="card-title">ISBN: @book.Isbn </h5>
-                            </div>
-                        <div class="card-body">
-                            @if (book.IsFavorite)
+
+                            @if (!string.IsNullOrEmpty(book.ShortDescription))
                             {
-                                <a asp-action="Favourites" asp-controller="Home" asp-route-Id="@book.Id" class="btn btn-danger">Remove Favourites</a>
+                                <div class="card-body">
+                                    <p class="card-text">
+
+                                        @if (book.ShortDescription.Length > 150)
+                                        {
+                                        <p>@book.ShortDescription.Substring(0,150)</p>
+                                        }
+                                        else
+                                        {
+                                        <p>@book.ShortDescription</p>
+                                        }
+                                    </p>
+                                </div>
                             }
                             else
                             {
-                                <a asp-action="Favourites" asp-controller="Home" asp-route-Id="@book.Id" class="btn btn-primary">Add Favourites</a>
+                                <div class="card-body" style="height:140px">
+                                </div>
                             }
-                        </div>
-                        <div class="card-footer text-muted">
-                            @if (@book.PublishedDate.HasValue)
-                            {
-                                @book.PublishedDate.Value.ToShortDateString()
-                            }else
-                            {
-                               <p class="card-text"> Date not available </p>
-                            }
+
+                            <div class="card-body">
+                                <h5 class="card-title">ISBN: @book.Isbn </h5>
+                            </div>
+                            <div class="card-body">
+                                @if (book.IsFavorite)
+                                {
+                                    <a asp-action="Favourites" asp-controller="Home" asp-route-Id="@book.Id" class="btn btn-danger">Remove Favourites</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Favourites" asp-controller="Home" asp-route-Id="@book.Id" class="btn btn-primary">Add Favourites</a>
+                                }
+                            </div>
+                            <div class="card-footer text-muted">
+                                @if (@book.PublishedDate.HasValue)
+                                {
+                                    @book.PublishedDate.Value.ToShortDateString()
+                                }
+                                else
+                                {
+                                    <p class="card-text"> Date not available </p>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+
+            </div>
 
         </div>
 
-    </div>
+    }
 
 
-
-
- 
